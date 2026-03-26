@@ -2,37 +2,59 @@ import 'List.dart';
 import 'dart:io';
 
 void main() {
-  List<LIst> list = [];
+  List<Task> tasks = [];
 
   while (true) {
-    stdout.write(
-      "enter 1 to new task or enter 2 to show to tasks and cheked or 3 to exit: ",
-    );
-    String? input = stdin.readLineSync();
-    if (input == '1') {
-      stdout.write("enter your task: ");
-      list.add(LIst(task: stdin.readLineSync()!));
-    } else if (input == '2') {
-      if (list.isEmpty) {
-        print("the list is empty");
-        continue;
-      }
-      for (var i = 0; i < list.length; i++) {
-        print(
-          "the task number ${i} is ${list[i].task} ${list[i].check ? "[x]" : "[]"}",
-        );
-      }
-      print("if you wonte to chekd enter number task or not enter (n): ");
-      String? b2 = stdin.readLineSync();
-      final index = int.tryParse(b2 ?? '');
-      if (index != null && index < list.length) {
-        list[index].trueCheck();
-        print("task is chacked");
-      } else if (b2 != 'n') {
-        print("enter true value");
+    stdout.write('Enter 1 to add a new task, 2 to view tasks, or 3 to exit: ');
+    String? userInput = stdin.readLineSync();
+
+    if (userInput == '1') {
+      stdout.write('Enter task description: ');
+      String? taskDescription = stdin.readLineSync();
+      if (taskDescription != null && taskDescription.isNotEmpty) {
+        tasks.add(Task(description: taskDescription));
+        print('Task added successfully!\n');
       } else {
-        break;
+        print('Invalid input. Please enter a valid task.\n');
       }
+    } else if (userInput == '2') {
+      _displayAndManageTasks(tasks);
+    } else if (userInput == '3') {
+      print('Goodbye!');
+      break;
+    } else {
+      print('Invalid choice. Please enter 1, 2, or 3.\n');
     }
+  }
+}
+
+void _displayAndManageTasks(List<Task> tasks) {
+  if (tasks.isEmpty) {
+    print('The task list is empty.\n');
+    return;
+  }
+
+  for (int taskIndex = 0; taskIndex < tasks.length; taskIndex++) {
+    final task = tasks[taskIndex];
+    final statusIcon = task.isCompleted ? '[✓]' : '[ ]';
+    print('Task $taskIndex: ${task.description} $statusIcon');
+  }
+
+  print('\nEnter the task number to mark as completed, or enter (n) to skip: ');
+  String? selectedInput = stdin.readLineSync();
+
+  if (selectedInput == 'n') {
+    print('');
+    return;
+  }
+
+  final selectedTaskIndex = int.tryParse(selectedInput ?? '');
+  if (selectedTaskIndex != null &&
+      selectedTaskIndex >= 0 &&
+      selectedTaskIndex < tasks.length) {
+    tasks[selectedTaskIndex].markAsCompleted();
+    print('Task marked as completed!\n');
+  } else {
+    print('Invalid input. Please enter a valid task number.\n');
   }
 }

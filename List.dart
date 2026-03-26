@@ -1,8 +1,10 @@
-class LIst {
-  String task;
-  bool check =  false;
-  void trueCheck() {
-    check = true;
+class Task {
+  String description;
+  bool isCompleted = false;
+
+  Task({required this.description});
+
+  void markAsCompleted() {
+    isCompleted = true;
   }
-  LIst({required this.task});
 }
